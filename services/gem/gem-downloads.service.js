@@ -1,12 +1,10 @@
-'use strict'
-
-const semver = require('semver')
-const Joi = require('joi')
-const { downloadCount } = require('../color-formatters')
-const { metric } = require('../text-formatters')
-const { latest: latestVersion } = require('../version')
-const { nonNegativeInteger } = require('../validators')
-const { BaseJsonService, InvalidParameter, InvalidResponse } = require('..')
+import semver from 'semver'
+import Joi from 'joi'
+import { downloadCount } from '../color-formatters.js'
+import { metric } from '../text-formatters.js'
+import { latest as latestVersion } from '../version.js'
+import { nonNegativeInteger } from '../validators.js'
+import { BaseJsonService, InvalidParameter, InvalidResponse } from '../index.js'
 
 const keywords = ['ruby']
 
@@ -26,7 +24,7 @@ const versionSchema = Joi.array()
   .min(1)
   .required()
 
-module.exports = class GemDownloads extends BaseJsonService {
+export default class GemDownloads extends BaseJsonService {
   static category = 'downloads'
   static route = { base: 'gem', pattern: ':variant(dt|dtv|dv)/:gem/:version?' }
   static examples = [
@@ -126,16 +124,14 @@ module.exports = class GemDownloads extends BaseJsonService {
   }
 
   async fetchDownloadCountForGem({ gem }) {
-    const {
-      downloads: totalDownloads,
-      version_downloads: versionDownloads,
-    } = await this._requestJson({
-      url: `https://rubygems.org/api/v1/gems/${gem}.json`,
-      schema: gemSchema,
-      errorMessages: {
-        404: 'gem not found',
-      },
-    })
+    const { downloads: totalDownloads, version_downloads: versionDownloads } =
+      await this._requestJson({
+        url: `https://rubygems.org/api/v1/gems/${gem}.json`,
+        schema: gemSchema,
+        errorMessages: {
+          404: 'gem not found',
+        },
+      })
     return { totalDownloads, versionDownloads }
   }
 
@@ -154,10 +150,8 @@ module.exports = class GemDownloads extends BaseJsonService {
       }
       downloads = await this.fetchDownloadCountForVersion({ gem, version })
     } else {
-      const {
-        totalDownloads,
-        versionDownloads,
-      } = await this.fetchDownloadCountForGem({ gem, variant })
+      const { totalDownloads, versionDownloads } =
+        await this.fetchDownloadCountForGem({ gem, variant })
       downloads = variant === 'dtv' ? versionDownloads : totalDownloads
     }
     return this.constructor.render({ variant, version, downloads })

@@ -1,12 +1,10 @@
-'use strict'
-
-const gql = require('graphql-tag')
-const Joi = require('joi')
-const { metric } = require('../text-formatters')
-const { nonNegativeInteger } = require('../validators')
-const { NotFound } = require('..')
-const { GithubAuthV4Service } = require('./github-auth-service')
-const { documentation, transformErrors } = require('./github-helpers')
+import gql from 'graphql-tag'
+import Joi from 'joi'
+import { metric } from '../text-formatters.js'
+import { nonNegativeInteger } from '../validators.js'
+import { NotFound } from '../index.js'
+import { GithubAuthV4Service } from './github-auth-service.js'
+import { documentation, transformErrors } from './github-helpers.js'
 
 const schema = Joi.object({
   data: Joi.object({
@@ -18,25 +16,20 @@ const schema = Joi.object({
   }).required(),
 }).required()
 
-module.exports = class GithubSponsors extends GithubAuthV4Service {
-  static category = 'social'
+export default class GithubSponsors extends GithubAuthV4Service {
+  static category = 'funding'
   static route = { base: 'github/sponsors', pattern: ':user' }
   static examples = [
     {
       title: 'GitHub Sponsors',
       namedParams: { user: 'Homebrew' },
-      queryParams: { style: 'social' },
-      staticPreview: {
-        message: '217',
-        style: 'social',
-      },
+      staticPreview: this.render({ count: 217 }),
       documentation,
     },
   ]
 
   static defaultBadgeData = {
     label: 'sponsors',
-    namedLogo: 'github',
   }
 
   static render({ count }) {
@@ -49,7 +42,7 @@ module.exports = class GithubSponsors extends GithubAuthV4Service {
   async fetch({ user }) {
     return this._requestGraphql({
       query: gql`
-        query($user: String!) {
+        query ($user: String!) {
           repositoryOwner(login: $user) {
             ... on User {
               sponsorshipsAsMaintainer {

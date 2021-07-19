@@ -1,5 +1,3 @@
-'use strict'
-
 describe('Main page', function () {
   const backendUrl = Cypress.env('backend_url')
   const SEARCH_INPUT = 'input[placeholder="search / project URL"]'
@@ -64,7 +62,7 @@ describe('Main page', function () {
   })
 
   it('Do not duplicate example parameters', function () {
-    cy.visit('/category/social')
+    cy.visit('/category/funding')
 
     cy.contains('GitHub Sponsors').click()
     cy.get('[name="style"]').should($style => {

@@ -1,7 +1,5 @@
-'use strict'
-
-const Joi = require('joi')
-const { BaseJsonService } = require('..')
+import Joi from 'joi'
+import { BaseJsonService } from '../index.js'
 
 const schema = Joi.object({
   status: Joi.allow(
@@ -40,7 +38,7 @@ const statusMap = {
   },
 }
 
-module.exports = class David extends BaseJsonService {
+export default class David extends BaseJsonService {
   static category = 'dependencies'
   static route = {
     base: 'david',
@@ -83,12 +81,12 @@ module.exports = class David extends BaseJsonService {
       options: { qs: { path } },
       errorMessages: {
         /* note:
-        david returns a 500 response for 'not found'
+        david returns a 504 response for 'not found'
         e.g: https://david-dm.org/foo/barbaz/info.json
         not a 404 so we can't handle 'not found' cleanly
         because this might also be some other error.
         */
-        500: 'repo or path not found or david internal error',
+        504: 'repo or path not found or david internal error',
       },
     })
   }

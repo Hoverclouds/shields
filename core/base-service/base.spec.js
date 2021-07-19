@@ -1,23 +1,22 @@
-'use strict'
-
-const Joi = require('joi')
-const chai = require('chai')
-const { expect } = chai
-const sinon = require('sinon')
-const prometheus = require('prom-client')
-const PrometheusMetrics = require('../server/prometheus-metrics')
-const trace = require('./trace')
-const {
+import Joi from 'joi'
+import chai from 'chai'
+import sinon from 'sinon'
+import prometheus from 'prom-client'
+import chaiAsPromised from 'chai-as-promised'
+import PrometheusMetrics from '../server/prometheus-metrics.js'
+import trace from './trace.js'
+import {
   NotFound,
   Inaccessible,
   InvalidResponse,
   InvalidParameter,
   Deprecated,
-} = require('./errors')
-const BaseService = require('./base')
-const { MetricHelper, MetricNames } = require('./metric-helper')
-require('../register-chai-plugins.spec')
-chai.use(require('chai-as-promised'))
+} from './errors.js'
+import BaseService from './base.js'
+import { MetricHelper, MetricNames } from './metric-helper.js'
+import '../register-chai-plugins.spec.js'
+const { expect } = chai
+chai.use(chaiAsPromised)
 
 const queryParamSchema = Joi.object({
   queryParamA: Joi.string(),
@@ -353,10 +352,8 @@ describe('BaseService', function () {
     it('handles the request', async function () {
       expect(mockHandleRequest).to.have.been.calledOnce
 
-      const {
-        queryParams: serviceQueryParams,
-        handler: requestHandler,
-      } = mockHandleRequest.getCall(0).args[1]
+      const { queryParams: serviceQueryParams, handler: requestHandler } =
+        mockHandleRequest.getCall(0).args[1]
       expect(serviceQueryParams).to.deep.equal([
         'queryParamA',
         'legacyQueryParamA',
@@ -390,13 +387,8 @@ describe('BaseService', function () {
 
   describe('getDefinition', function () {
     it('returns the expected result', function () {
-      const {
-        category,
-        name,
-        isDeprecated,
-        route,
-        examples,
-      } = DummyService.getDefinition()
+      const { category, name, isDeprecated, route, examples } =
+        DummyService.getDefinition()
       expect({
         category,
         name,
@@ -510,10 +502,11 @@ describe('BaseService', function () {
         buffer: 'x'.repeat(65536 + 1),
         res: { statusCode: 200 },
       })
-      const serviceInstance = new DummyServiceWithServiceResponseSizeMetricEnabled(
-        { sendAndCacheRequest, metricHelper },
-        defaultConfig
-      )
+      const serviceInstance =
+        new DummyServiceWithServiceResponseSizeMetricEnabled(
+          { sendAndCacheRequest, metricHelper },
+          defaultConfig
+        )
 
       await serviceInstance._request({ url })
 

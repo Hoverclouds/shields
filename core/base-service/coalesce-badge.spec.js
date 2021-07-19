@@ -1,8 +1,6 @@
-'use strict'
-
-const { expect } = require('chai')
-const { getShieldsIcon, getSimpleIcon } = require('../../lib/logos')
-const coalesceBadge = require('./coalesce-badge')
+import { expect } from 'chai'
+import { getShieldsIcon, getSimpleIcon } from '../../lib/logos.js'
+import coalesceBadge from './coalesce-badge.js'
 
 describe('coalesceBadge', function () {
   describe('Label', function () {
@@ -268,8 +266,7 @@ describe('coalesceBadge', function () {
         coalesceBadge(
           { link: 'https://circleci.com/gh/badges/daily-tests' },
           {
-            link:
-              'https://circleci.com/workflow-run/184ef3de-4836-4805-a2e4-0ceba099f92d',
+            link: 'https://circleci.com/workflow-run/184ef3de-4836-4805-a2e4-0ceba099f92d',
           },
           {}
         ).links

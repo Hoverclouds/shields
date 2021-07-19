@@ -49,10 +49,8 @@ export default function Main({
     [k: string]: ServiceDefinition[]
   }>()
   const [selectedExample, setSelectedExample] = useState<RenderableExample>()
-  const [
-    selectedExampleIsSuggestion,
-    setSelectedExampleIsSuggestion,
-  ] = useState(false)
+  const [selectedExampleIsSuggestion, setSelectedExampleIsSuggestion] =
+    useState(false)
   const searchTimeout = useRef(0)
   const baseUrl = getBaseUrl()
 

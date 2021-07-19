@@ -1,8 +1,6 @@
-'use strict'
-
-const Joi = require('joi')
-const { colorScale, coveragePercentage } = require('../color-formatters')
-const { BaseJsonService } = require('..')
+import Joi from 'joi'
+import { colorScale, coveragePercentage } from '../color-formatters.js'
+import { BaseJsonService } from '../index.js'
 
 const schema = Joi.object({
   badge_level: Joi.string().required(),
@@ -30,7 +28,7 @@ const summaryColorScale = colorScale(
   ]
 )
 
-module.exports = class CIIBestPracticesService extends BaseJsonService {
+export default class CIIBestPracticesService extends BaseJsonService {
   static category = 'analysis'
   static route = {
     base: 'cii',
@@ -113,16 +111,14 @@ module.exports = class CIIBestPracticesService extends BaseJsonService {
 
   async handle({ metric, projectId }) {
     // No official API documentation is available.
-    const {
-      badge_level: level,
-      tiered_percentage: percentage,
-    } = await this._requestJson({
-      schema,
-      url: `https://bestpractices.coreinfrastructure.org/projects/${projectId}/badge.json`,
-      errorMessages: {
-        404: 'project not found',
-      },
-    })
+    const { badge_level: level, tiered_percentage: percentage } =
+      await this._requestJson({
+        schema,
+        url: `https://bestpractices.coreinfrastructure.org/projects/${projectId}/badge.json`,
+        errorMessages: {
+          404: 'project not found',
+        },
+      })
 
     if (metric === 'level') {
       return this.constructor.renderLevelBadge({ level })

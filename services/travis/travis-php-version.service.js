@@ -1,12 +1,10 @@
-'use strict'
-
-const Joi = require('joi')
-const {
+import Joi from 'joi'
+import {
   minorVersion,
   versionReduction,
   getPhpReleases,
-} = require('../php-version')
-const { BaseJsonService } = require('..')
+} from '../php-version.js'
+import { BaseJsonService } from '../index.js'
 
 const optionalNumberOrString = Joi.alternatives(Joi.string(), Joi.number())
 const schema = Joi.object({
@@ -23,7 +21,7 @@ const schema = Joi.object({
   }).required(),
 }).required()
 
-module.exports = class TravisPhpVersion extends BaseJsonService {
+export default class TravisPhpVersion extends BaseJsonService {
   static category = 'platform-support'
 
   static route = {
@@ -34,8 +32,8 @@ module.exports = class TravisPhpVersion extends BaseJsonService {
   static examples = [
     {
       title: 'PHP version from Travis config',
-      namedParams: { user: 'symfony', repo: 'symfony', branch: 'master' },
-      staticPreview: this.render({ reduction: ['^7.1.3'] }),
+      namedParams: { user: 'yiisoft', repo: 'yii', branch: 'master' },
+      staticPreview: this.render({ reduction: ['5.3 - 7.4'] }),
     },
   ]
 

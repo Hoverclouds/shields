@@ -1,12 +1,10 @@
-'use strict'
-
-const { getDependencyVersion } = require('../package-json-helpers')
-const NpmBase = require('./npm-base')
+import { getDependencyVersion } from '../package-json-helpers.js'
+import NpmBase from './npm-base.js'
 
 const { queryParamSchema } = NpmBase
 const keywords = ['node']
 
-module.exports = class NpmDependencyVersion extends NpmBase {
+export default class NpmDependencyVersion extends NpmBase {
   static category = 'platform-support'
 
   static route = {
@@ -122,15 +120,12 @@ module.exports = class NpmDependencyVersion extends NpmBase {
       dependencyScope ? `${dependencyScope}/` : ''
     }${dependency}`
 
-    const {
-      dependencies,
-      devDependencies,
-      peerDependencies,
-    } = await this.fetchPackageData({
-      scope,
-      packageName,
-      registryUrl,
-    })
+    const { dependencies, devDependencies, peerDependencies } =
+      await this.fetchPackageData({
+        scope,
+        packageName,
+        registryUrl,
+      })
 
     const { range } = getDependencyVersion({
       kind,

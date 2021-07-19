@@ -1,10 +1,8 @@
-'use strict'
-
-const Joi = require('joi')
-const { metric } = require('../text-formatters')
-const { downloadCount: downloadCountColor } = require('../color-formatters')
-const { nonNegativeInteger } = require('../validators')
-const EclipseMarketplaceBase = require('./eclipse-marketplace-base')
+import Joi from 'joi'
+import { metric } from '../text-formatters.js'
+import { downloadCount as downloadCountColor } from '../color-formatters.js'
+import { nonNegativeInteger } from '../validators.js'
+import EclipseMarketplaceBase from './eclipse-marketplace-base.js'
 
 const monthlyResponseSchema = Joi.object({
   marketplace: Joi.object({
@@ -23,7 +21,12 @@ const totalResponseSchema = Joi.object({
 }).required()
 
 function DownloadsForInterval(interval) {
-  const { base, schema, messageSuffix = '', name } = {
+  const {
+    base,
+    schema,
+    messageSuffix = '',
+    name,
+  } = {
     month: {
       base: 'eclipse-marketplace/dm',
       messageSuffix: '/month',
@@ -67,4 +70,4 @@ function DownloadsForInterval(interval) {
   }
 }
 
-module.exports = ['month', 'total'].map(DownloadsForInterval)
+export default ['month', 'total'].map(DownloadsForInterval)
